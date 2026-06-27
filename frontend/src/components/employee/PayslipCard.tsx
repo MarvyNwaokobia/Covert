@@ -89,7 +89,7 @@ export function PayslipCard() {
 
         {/* Step indicators when busy */}
         {isBusy && (
-          <div className="flex items-center justify-center gap-3 text-xs text-text-muted">
+          <div className="flex flex-wrap items-center justify-center gap-2 text-xs text-text-muted">
             <Step label="Sign" active={decryptState === 'signing'} done={['fetching','decrypting'].includes(decryptState)} />
             <div className="w-4 h-px bg-border-default" />
             <Step label="Fetch" active={decryptState === 'fetching'} done={decryptState === 'decrypting'} />

@@ -73,7 +73,7 @@ export default function HomePage() {
         </div>
 
         {isConnected && role === 'unknown' && !isLoading && (
-          <div className="grid grid-cols-3 gap-3 pt-2">
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 pt-2">
             {[
               { label: 'Employer', colorClass: 'text-employer', desc: 'Upload & distribute payroll' },
               { label: 'Employee', colorClass: 'text-employee', desc: 'View your encrypted salary' },

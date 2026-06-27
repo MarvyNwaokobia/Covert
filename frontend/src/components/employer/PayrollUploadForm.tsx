@@ -86,22 +86,23 @@ export function PayrollUploadForm() {
       )}
 
       <form onSubmit={handleSubmit} className="space-y-3">
-        {/* Header row */}
-        <div className="grid grid-cols-[1fr_120px_32px] gap-2 px-1">
+        {/* Header row — hidden on mobile, shown sm+ */}
+        <div className="hidden sm:grid sm:grid-cols-[1fr_120px_32px] gap-2 px-1">
           <span className="text-xs text-text-muted">Employee wallet address</span>
           <span className="text-xs text-text-muted">Salary (cUSDT)</span>
           <span />
         </div>
 
         {/* Entry rows */}
-        {rows.map((row, i) => {
+        {rows.map((row) => {
           const errs = rowErrors(row)
           return (
             <div key={row.id} className="space-y-1">
-              <div className="grid grid-cols-[1fr_120px_32px] gap-2 items-center">
+              {/* Mobile: stacked. sm+: side-by-side grid */}
+              <div className="flex flex-col gap-1.5 sm:grid sm:grid-cols-[1fr_120px_32px] sm:gap-2 sm:items-center">
                 <input
                   type="text"
-                  placeholder="0x…"
+                  placeholder="Employee address (0x…)"
                   value={row.address}
                   onChange={(e) => updateRow(row.id, 'address', e.target.value)}
                   disabled={isBusy}
@@ -110,27 +111,29 @@ export function PayrollUploadForm() {
                     focus:outline-none focus:border-employer/50 focus:ring-1 focus:ring-employer/20
                     disabled:opacity-40"
                 />
-                <input
-                  type="number"
-                  placeholder="0.00"
-                  value={row.amount}
-                  min="0"
-                  step="0.01"
-                  onChange={(e) => updateRow(row.id, 'amount', e.target.value)}
-                  disabled={isBusy}
-                  className="w-full px-3 py-2 text-sm bg-bg-elevated border border-border-default rounded-lg
-                    text-text-primary placeholder:text-text-subtle
-                    focus:outline-none focus:border-employer/50 focus:ring-1 focus:ring-employer/20
-                    disabled:opacity-40"
-                />
-                <button
-                  type="button"
-                  onClick={() => rows.length > 1 && removeRow(row.id)}
-                  disabled={rows.length === 1 || isBusy}
-                  className="w-8 h-8 flex items-center justify-center rounded-lg text-text-subtle
-                    hover:text-red-400 hover:bg-red-500/10 transition-colors
-                    disabled:opacity-20 disabled:cursor-not-allowed"
-                >✕</button>
+                <div className="flex gap-1.5 sm:contents">
+                  <input
+                    type="number"
+                    placeholder="0.00 cUSDT"
+                    value={row.amount}
+                    min="0"
+                    step="0.01"
+                    onChange={(e) => updateRow(row.id, 'amount', e.target.value)}
+                    disabled={isBusy}
+                    className="flex-1 sm:w-full px-3 py-2 text-sm bg-bg-elevated border border-border-default rounded-lg
+                      text-text-primary placeholder:text-text-subtle
+                      focus:outline-none focus:border-employer/50 focus:ring-1 focus:ring-employer/20
+                      disabled:opacity-40"
+                  />
+                  <button
+                    type="button"
+                    onClick={() => rows.length > 1 && removeRow(row.id)}
+                    disabled={rows.length === 1 || isBusy}
+                    className="w-8 h-8 shrink-0 flex items-center justify-center rounded-lg text-text-subtle
+                      hover:text-red-400 hover:bg-red-500/10 transition-colors
+                      disabled:opacity-20 disabled:cursor-not-allowed"
+                  >✕</button>
+                </div>
               </div>
               {errs.length > 0 && (
                 <p className="text-xs text-red-400 pl-1">{errs.join(' · ')}</p>
