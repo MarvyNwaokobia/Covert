@@ -1,0 +1,160 @@
+[
+  {
+    "type": "function",
+    "name": "employer",
+    "inputs": [],
+    "outputs": [{ "name": "", "type": "address" }],
+    "stateMutability": "view"
+  },
+  {
+    "type": "function",
+    "name": "isEmployee",
+    "inputs": [{ "name": "account", "type": "address" }],
+    "outputs": [{ "name": "", "type": "bool" }],
+    "stateMutability": "view"
+  },
+  {
+    "type": "function",
+    "name": "isAuditor",
+    "inputs": [{ "name": "account", "type": "address" }],
+    "outputs": [{ "name": "", "type": "bool" }],
+    "stateMutability": "view"
+  },
+  {
+    "type": "function",
+    "name": "addEmployee",
+    "inputs": [{ "name": "employee", "type": "address" }],
+    "outputs": [],
+    "stateMutability": "nonpayable"
+  },
+  {
+    "type": "function",
+    "name": "addAuditor",
+    "inputs": [{ "name": "auditor", "type": "address" }],
+    "outputs": [],
+    "stateMutability": "nonpayable"
+  },
+  {
+    "type": "function",
+    "name": "uploadPayroll",
+    "inputs": [
+      { "name": "employees", "type": "address[]" },
+      { "name": "encryptedSalaries", "type": "bytes32[]" },
+      { "name": "inputProofs", "type": "bytes[]" }
+    ],
+    "outputs": [],
+    "stateMutability": "nonpayable"
+  },
+  {
+    "type": "function",
+    "name": "triggerDistribution",
+    "inputs": [],
+    "outputs": [],
+    "stateMutability": "nonpayable"
+  },
+  {
+    "type": "function",
+    "name": "fundBonusPool",
+    "inputs": [
+      { "name": "encryptedAmount", "type": "bytes32" },
+      { "name": "inputProof", "type": "bytes" }
+    ],
+    "outputs": [],
+    "stateMutability": "nonpayable"
+  },
+  {
+    "type": "function",
+    "name": "requestSalaryDecryption",
+    "inputs": [
+      { "name": "publicKey", "type": "bytes32" },
+      { "name": "signature", "type": "bytes" }
+    ],
+    "outputs": [{ "name": "encryptedSalary", "type": "bytes" }],
+    "stateMutability": "view"
+  },
+  {
+    "type": "function",
+    "name": "allocatePeerBonus",
+    "inputs": [
+      { "name": "recipient", "type": "address" },
+      { "name": "encryptedAmount", "type": "bytes32" },
+      { "name": "inputProof", "type": "bytes" }
+    ],
+    "outputs": [],
+    "stateMutability": "nonpayable"
+  },
+  {
+    "type": "function",
+    "name": "getPeerBonusBudget",
+    "inputs": [
+      { "name": "publicKey", "type": "bytes32" },
+      { "name": "signature", "type": "bytes" }
+    ],
+    "outputs": [{ "name": "encryptedBudget", "type": "bytes" }],
+    "stateMutability": "view"
+  },
+  {
+    "type": "function",
+    "name": "getTotalDisbursed",
+    "inputs": [
+      { "name": "publicKey", "type": "bytes32" },
+      { "name": "signature", "type": "bytes" }
+    ],
+    "outputs": [{ "name": "encryptedTotal", "type": "bytes" }],
+    "stateMutability": "view"
+  },
+  {
+    "type": "function",
+    "name": "getTotalBonusAllocated",
+    "inputs": [
+      { "name": "publicKey", "type": "bytes32" },
+      { "name": "signature", "type": "bytes" }
+    ],
+    "outputs": [{ "name": "encryptedTotal", "type": "bytes" }],
+    "stateMutability": "view"
+  },
+  {
+    "type": "function",
+    "name": "getEmployeeCount",
+    "inputs": [],
+    "outputs": [{ "name": "", "type": "uint256" }],
+    "stateMutability": "view"
+  },
+  {
+    "type": "function",
+    "name": "getCycleCount",
+    "inputs": [],
+    "outputs": [{ "name": "", "type": "uint256" }],
+    "stateMutability": "view"
+  },
+  {
+    "type": "event",
+    "name": "PayrollTriggered",
+    "inputs": [
+      { "name": "timestamp", "type": "uint256", "indexed": false },
+      { "name": "recipientCount", "type": "uint256", "indexed": false }
+    ]
+  },
+  {
+    "type": "event",
+    "name": "BonusAllocated",
+    "inputs": [
+      { "name": "from", "type": "address", "indexed": true },
+      { "name": "to", "type": "address", "indexed": true }
+    ]
+  },
+  {
+    "type": "event",
+    "name": "EmployeeAdded",
+    "inputs": [
+      { "name": "employee", "type": "address", "indexed": true }
+    ]
+  },
+  {
+    "type": "event",
+    "name": "AuditorAdded",
+    "inputs": [
+      { "name": "auditor", "type": "address", "indexed": true }
+    ]
+  }
+]
