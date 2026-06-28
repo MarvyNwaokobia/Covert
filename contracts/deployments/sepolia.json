@@ -1,0 +1,10 @@
+{
+  "network": "sepolia",
+  "chainId": 11155111,
+  "deployer": "0x3C343AD077983371b29fee386bdBC8a92E934C51",
+  "employer": "0x3C343AD077983371b29fee386bdBC8a92E934C51",
+  "CovertPayroll": "0x6ded5205331545437aAeF4897738D4ed7055Ce1c",
+  "cUSDT": "0xDC9dDdB20D1D57Ef916738EAeB87B0943d1307d3",
+  "cUSDTIsMock": true,
+  "deployedAt": "2026-06-28T14:02:38.532Z"
+}

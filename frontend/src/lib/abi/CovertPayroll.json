@@ -1,160 +1,466 @@
 [
   {
-    "type": "function",
-    "name": "employer",
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "cUSDTToken",
+        "type": "address"
+      }
+    ],
+    "stateMutability": "nonpayable",
+    "type": "constructor"
+  },
+  {
     "inputs": [],
-    "outputs": [{ "name": "", "type": "address" }],
-    "stateMutability": "view"
+    "name": "AlreadyAuditor",
+    "type": "error"
   },
   {
-    "type": "function",
-    "name": "isEmployee",
-    "inputs": [{ "name": "account", "type": "address" }],
-    "outputs": [{ "name": "", "type": "bool" }],
-    "stateMutability": "view"
-  },
-  {
-    "type": "function",
-    "name": "isAuditor",
-    "inputs": [{ "name": "account", "type": "address" }],
-    "outputs": [{ "name": "", "type": "bool" }],
-    "stateMutability": "view"
-  },
-  {
-    "type": "function",
-    "name": "addEmployee",
-    "inputs": [{ "name": "employee", "type": "address" }],
-    "outputs": [],
-    "stateMutability": "nonpayable"
-  },
-  {
-    "type": "function",
-    "name": "addAuditor",
-    "inputs": [{ "name": "auditor", "type": "address" }],
-    "outputs": [],
-    "stateMutability": "nonpayable"
-  },
-  {
-    "type": "function",
-    "name": "uploadPayroll",
-    "inputs": [
-      { "name": "employees", "type": "address[]" },
-      { "name": "encryptedSalaries", "type": "bytes32[]" },
-      { "name": "inputProofs", "type": "bytes[]" }
-    ],
-    "outputs": [],
-    "stateMutability": "nonpayable"
-  },
-  {
-    "type": "function",
-    "name": "triggerDistribution",
     "inputs": [],
-    "outputs": [],
-    "stateMutability": "nonpayable"
+    "name": "AlreadyEmployee",
+    "type": "error"
   },
   {
-    "type": "function",
-    "name": "fundBonusPool",
-    "inputs": [
-      { "name": "encryptedAmount", "type": "bytes32" },
-      { "name": "inputProof", "type": "bytes" }
-    ],
-    "outputs": [],
-    "stateMutability": "nonpayable"
-  },
-  {
-    "type": "function",
-    "name": "requestSalaryDecryption",
-    "inputs": [
-      { "name": "publicKey", "type": "bytes32" },
-      { "name": "signature", "type": "bytes" }
-    ],
-    "outputs": [{ "name": "encryptedSalary", "type": "bytes" }],
-    "stateMutability": "view"
-  },
-  {
-    "type": "function",
-    "name": "allocatePeerBonus",
-    "inputs": [
-      { "name": "recipient", "type": "address" },
-      { "name": "encryptedAmount", "type": "bytes32" },
-      { "name": "inputProof", "type": "bytes" }
-    ],
-    "outputs": [],
-    "stateMutability": "nonpayable"
-  },
-  {
-    "type": "function",
-    "name": "getPeerBonusBudget",
-    "inputs": [
-      { "name": "publicKey", "type": "bytes32" },
-      { "name": "signature", "type": "bytes" }
-    ],
-    "outputs": [{ "name": "encryptedBudget", "type": "bytes" }],
-    "stateMutability": "view"
-  },
-  {
-    "type": "function",
-    "name": "getTotalDisbursed",
-    "inputs": [
-      { "name": "publicKey", "type": "bytes32" },
-      { "name": "signature", "type": "bytes" }
-    ],
-    "outputs": [{ "name": "encryptedTotal", "type": "bytes" }],
-    "stateMutability": "view"
-  },
-  {
-    "type": "function",
-    "name": "getTotalBonusAllocated",
-    "inputs": [
-      { "name": "publicKey", "type": "bytes32" },
-      { "name": "signature", "type": "bytes" }
-    ],
-    "outputs": [{ "name": "encryptedTotal", "type": "bytes" }],
-    "stateMutability": "view"
-  },
-  {
-    "type": "function",
-    "name": "getEmployeeCount",
     "inputs": [],
-    "outputs": [{ "name": "", "type": "uint256" }],
-    "stateMutability": "view"
+    "name": "EmptyInput",
+    "type": "error"
   },
   {
-    "type": "function",
-    "name": "getCycleCount",
     "inputs": [],
-    "outputs": [{ "name": "", "type": "uint256" }],
-    "stateMutability": "view"
+    "name": "LengthMismatch",
+    "type": "error"
   },
   {
-    "type": "event",
-    "name": "PayrollTriggered",
+    "inputs": [],
+    "name": "NoEmployees",
+    "type": "error"
+  },
+  {
+    "inputs": [],
+    "name": "NotEmployee",
+    "type": "error"
+  },
+  {
+    "inputs": [],
+    "name": "NotEmployer",
+    "type": "error"
+  },
+  {
+    "inputs": [],
+    "name": "SelfAllocation",
+    "type": "error"
+  },
+  {
     "inputs": [
-      { "name": "timestamp", "type": "uint256", "indexed": false },
-      { "name": "recipientCount", "type": "uint256", "indexed": false }
-    ]
+      {
+        "internalType": "bytes32",
+        "name": "handle",
+        "type": "bytes32"
+      },
+      {
+        "internalType": "address",
+        "name": "sender",
+        "type": "address"
+      }
+    ],
+    "name": "SenderNotAllowedToUseHandle",
+    "type": "error"
   },
   {
-    "type": "event",
-    "name": "BonusAllocated",
+    "inputs": [],
+    "name": "ZamaProtocolUnsupported",
+    "type": "error"
+  },
+  {
+    "inputs": [],
+    "name": "ZeroAddress",
+    "type": "error"
+  },
+  {
+    "anonymous": false,
     "inputs": [
-      { "name": "from", "type": "address", "indexed": true },
-      { "name": "to", "type": "address", "indexed": true }
-    ]
-  },
-  {
-    "type": "event",
-    "name": "EmployeeAdded",
-    "inputs": [
-      { "name": "employee", "type": "address", "indexed": true }
-    ]
-  },
-  {
-    "type": "event",
+      {
+        "indexed": true,
+        "internalType": "address",
+        "name": "auditor",
+        "type": "address"
+      }
+    ],
     "name": "AuditorAdded",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
     "inputs": [
-      { "name": "auditor", "type": "address", "indexed": true }
-    ]
+      {
+        "indexed": true,
+        "internalType": "address",
+        "name": "from",
+        "type": "address"
+      },
+      {
+        "indexed": true,
+        "internalType": "address",
+        "name": "to",
+        "type": "address"
+      }
+    ],
+    "name": "BonusAllocated",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "employeeCount",
+        "type": "uint256"
+      }
+    ],
+    "name": "BonusPoolFunded",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": true,
+        "internalType": "address",
+        "name": "employee",
+        "type": "address"
+      }
+    ],
+    "name": "EmployeeAdded",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "timestamp",
+        "type": "uint256"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "recipientCount",
+        "type": "uint256"
+      }
+    ],
+    "name": "PayrollTriggered",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "employeeCount",
+        "type": "uint256"
+      }
+    ],
+    "name": "PayrollUploaded",
+    "type": "event"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "auditor",
+        "type": "address"
+      }
+    ],
+    "name": "addAuditor",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "employee",
+        "type": "address"
+      }
+    ],
+    "name": "addEmployee",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "recipient",
+        "type": "address"
+      },
+      {
+        "internalType": "externalEuint64",
+        "name": "encryptedAmount",
+        "type": "bytes32"
+      },
+      {
+        "internalType": "bytes",
+        "name": "inputProof",
+        "type": "bytes"
+      }
+    ],
+    "name": "allocatePeerBonus",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "cUSDT",
+    "outputs": [
+      {
+        "internalType": "contract IConfToken",
+        "name": "",
+        "type": "address"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "confidentialProtocolId",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "employer",
+    "outputs": [
+      {
+        "internalType": "address",
+        "name": "",
+        "type": "address"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "externalEuint64",
+        "name": "encryptedAmount",
+        "type": "bytes32"
+      },
+      {
+        "internalType": "bytes",
+        "name": "inputProof",
+        "type": "bytes"
+      }
+    ],
+    "name": "fundBonusPool",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "getAuditors",
+    "outputs": [
+      {
+        "internalType": "address[]",
+        "name": "",
+        "type": "address[]"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "getCycleCount",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "getEmployeeCount",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "getEmployees",
+    "outputs": [
+      {
+        "internalType": "address[]",
+        "name": "",
+        "type": "address[]"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "getMyBonusBudget",
+    "outputs": [
+      {
+        "internalType": "euint64",
+        "name": "",
+        "type": "bytes32"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "getMySalary",
+    "outputs": [
+      {
+        "internalType": "euint64",
+        "name": "",
+        "type": "bytes32"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "employee",
+        "type": "address"
+      }
+    ],
+    "name": "getSalaryHandle",
+    "outputs": [
+      {
+        "internalType": "euint64",
+        "name": "",
+        "type": "bytes32"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "getTotalBonusAllocated",
+    "outputs": [
+      {
+        "internalType": "euint64",
+        "name": "",
+        "type": "bytes32"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "getTotalDisbursed",
+    "outputs": [
+      {
+        "internalType": "euint64",
+        "name": "",
+        "type": "bytes32"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "",
+        "type": "address"
+      }
+    ],
+    "name": "isAuditor",
+    "outputs": [
+      {
+        "internalType": "bool",
+        "name": "",
+        "type": "bool"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "",
+        "type": "address"
+      }
+    ],
+    "name": "isEmployee",
+    "outputs": [
+      {
+        "internalType": "bool",
+        "name": "",
+        "type": "bool"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "triggerDistribution",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address[]",
+        "name": "employees",
+        "type": "address[]"
+      },
+      {
+        "internalType": "externalEuint64[]",
+        "name": "encryptedSalaries",
+        "type": "bytes32[]"
+      },
+      {
+        "internalType": "bytes[]",
+        "name": "inputProofs",
+        "type": "bytes[]"
+      }
+    ],
+    "name": "uploadPayroll",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
   }
 ]

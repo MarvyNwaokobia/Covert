@@ -1,0 +1,12 @@
+node_modules
+artifacts
+cache
+typechain-types
+fhevmTemp
+.env
+*.log
+coverage
+coverage.json
+
+# keep the example env (root .gitignore ignores .env* globally)
+!.env.example
