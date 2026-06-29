@@ -110,7 +110,7 @@ export function AggregateStats() {
         </Button>
 
         <p className="text-xs text-text-subtle text-center">
-          EIP-712 · No gas · Aggregate-only access enforced on-chain
+          EIP-712 · No gas · Zama relayer · Aggregate-only access enforced on-chain
         </p>
       </div>
     </Card>

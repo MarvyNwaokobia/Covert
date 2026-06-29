@@ -32,7 +32,7 @@ export function FhevmProvider({ children }: { children: React.ReactNode }) {
     let isMounted = true
     setError(null)
 
-    // Dynamic import keeps fhevmjs (WASM) out of the SSR/initial bundle
+    // Dynamic import keeps the relayer-sdk (WASM) out of the SSR/initial bundle
     import('@/lib/fhevm').then(({ getFhevmInstance }) => {
       if (!isMounted) return
       getFhevmInstance()

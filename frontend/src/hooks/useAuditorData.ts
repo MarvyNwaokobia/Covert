@@ -1,7 +1,7 @@
 'use client'
 
 import { useState } from 'react'
-import { useSignTypedData, useReadContract } from 'wagmi'
+import { useReadContract } from 'wagmi'
 import { useFhevm } from './useFhevm'
 import { useToast } from '@/providers/ToastProvider'
 import { COVERT_CONTRACT_ADDRESS } from '@/lib/constants'
@@ -11,8 +11,7 @@ import { type Abi } from 'viem'
 const abi = CovertABI as Abi
 
 export function useAuditorData() {
-  const { generateDecryptionKeypair, buildEip712ForDecryption, decryptValue, isReady } = useFhevm()
-  const { signTypedDataAsync } = useSignTypedData()
+  const { userDecryptHandles, isReady } = useFhevm()
   const { toast } = useToast()
 
   const [isDecrypting, setIsDecrypting] = useState(false)
@@ -41,41 +40,33 @@ export function useAuditorData() {
 
     setIsDecrypting(true)
     try {
-      const { publicKey, privateKey } = await generateDecryptionKeypair()
-      const eip712 = await buildEip712ForDecryption(publicKey)
-
-      toast({ type: 'info', title: 'Sign to view aggregates', message: 'Confirms your auditor identity — no gas needed' })
-
-      const signature = await signTypedDataAsync({
-        domain: eip712.domain,
-        types: eip712.types,
-        primaryType: eip712.primaryType as string,
-        message: eip712.message,
-      }) as `0x${string}`
-
+      // 1. Read both ciphertext handles (no args — ACL gates access to employer/auditors)
       const { readContract } = await import('wagmi/actions')
       const { wagmiConfig } = await import('@/lib/wagmi')
 
-      const [encryptedTotal, encryptedBonus] = await Promise.all([
+      const [handleDisbursed, handleBonus] = await Promise.all([
         readContract(wagmiConfig, {
           address: COVERT_CONTRACT_ADDRESS,
           abi,
           functionName: 'getTotalDisbursed',
-          args: [publicKey, signature],
-        }) as Promise<`0x${string}`>,
+        }) as Promise<string>,
         readContract(wagmiConfig, {
           address: COVERT_CONTRACT_ADDRESS,
           abi,
           functionName: 'getTotalBonusAllocated',
-          args: [publicKey, signature],
-        }) as Promise<`0x${string}`>,
+        }) as Promise<string>,
       ])
 
-      const totalBytes = Buffer.from(encryptedTotal.slice(2), 'hex')
-      const bonusBytes = Buffer.from(encryptedBonus.slice(2), 'hex')
+      // 2. One signature decrypts both handles via the Zama relayer
+      toast({ type: 'info', title: 'Sign to view aggregates', message: 'Confirms your auditor identity — no gas needed' })
 
-      setTotalDisbursed(decryptValue(privateKey, new Uint8Array(totalBytes)))
-      setTotalBonusAllocated(decryptValue(privateKey, new Uint8Array(bonusBytes)))
+      const result = await userDecryptHandles([
+        { handle: handleDisbursed, contractAddress: COVERT_CONTRACT_ADDRESS },
+        { handle: handleBonus, contractAddress: COVERT_CONTRACT_ADDRESS },
+      ])
+
+      setTotalDisbursed(result[handleDisbursed])
+      setTotalBonusAllocated(result[handleBonus])
 
       toast({ type: 'success', title: 'Aggregates decrypted', message: 'Individual salaries remain hidden' })
     } catch (err) {

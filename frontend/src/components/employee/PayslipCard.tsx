@@ -12,9 +12,9 @@ function formatCUSDT(raw: bigint): string {
 
 const stateLabels: Record<string, string> = {
   idle:       'Your salary is stored as an encrypted value on-chain. Request decryption to view it.',
-  signing:    'Waiting for wallet signature…',
-  fetching:   'Fetching re-encrypted salary from contract…',
-  decrypting: 'Decrypting locally in your browser…',
+  fetching:   'Reading encrypted salary handle from contract…',
+  signing:    'Waiting for wallet signature — the Zama relayer will decrypt off-chain…',
+  decrypting: 'Finalising decryption…',
   revealed:   '',
   error:      'Decryption failed. Try again.',
 }
@@ -90,9 +90,9 @@ export function PayslipCard() {
         {/* Step indicators when busy */}
         {isBusy && (
           <div className="flex flex-wrap items-center justify-center gap-2 text-xs text-text-muted">
-            <Step label="Sign" active={decryptState === 'signing'} done={['fetching','decrypting'].includes(decryptState)} />
+            <Step label="Fetch" active={decryptState === 'fetching'} done={['signing','decrypting'].includes(decryptState)} />
             <div className="w-4 h-px bg-border-default" />
-            <Step label="Fetch" active={decryptState === 'fetching'} done={decryptState === 'decrypting'} />
+            <Step label="Sign" active={decryptState === 'signing'} done={decryptState === 'decrypting'} />
             <div className="w-4 h-px bg-border-default" />
             <Step label="Decrypt" active={decryptState === 'decrypting'} done={false} />
           </div>
@@ -120,7 +120,7 @@ export function PayslipCard() {
         )}
 
         <p className="text-xs text-text-subtle text-center">
-          EIP-712 · No gas · Decrypted only in your browser
+          EIP-712 · No gas · Decrypted off-chain via Zama relayer
         </p>
       </div>
     </Card>

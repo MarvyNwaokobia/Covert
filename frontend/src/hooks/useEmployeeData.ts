@@ -1,7 +1,7 @@
 'use client'
 
 import { useState } from 'react'
-import { useAccount, useSignTypedData, useWriteContract } from 'wagmi'
+import { useAccount, useWriteContract } from 'wagmi'
 import { useFhevm } from './useFhevm'
 import { useToast } from '@/providers/ToastProvider'
 import { COVERT_CONTRACT_ADDRESS } from '@/lib/constants'
@@ -14,8 +14,7 @@ type DecryptState = 'idle' | 'signing' | 'fetching' | 'decrypting' | 'revealed' 
 
 export function useEmployeeData() {
   const { address } = useAccount()
-  const { generateDecryptionKeypair, buildEip712ForDecryption, decryptValue, encryptUint64, isReady } = useFhevm()
-  const { signTypedDataAsync } = useSignTypedData()
+  const { userDecryptHandles, encryptUint64, isReady } = useFhevm()
   const { writeContractAsync } = useWriteContract()
   const { toast, dismiss } = useToast()
 
@@ -30,35 +29,24 @@ export function useEmployeeData() {
     }
 
     try {
-      setDecryptState('signing')
-      const { publicKey, privateKey } = await generateDecryptionKeypair()
-
-      const eip712 = await buildEip712ForDecryption(publicKey)
-      toast({ type: 'info', title: 'Sign to decrypt', message: 'Confirm the signature in your wallet — no gas needed' })
-
-      const signature = await signTypedDataAsync({
-        domain: eip712.domain,
-        types: eip712.types,
-        primaryType: eip712.primaryType as string,
-        message: eip712.message,
-      }) as `0x${string}`
-
+      // 1. Read the ciphertext handle from the contract
       setDecryptState('fetching')
       const { readContract } = await import('wagmi/actions')
       const { wagmiConfig } = await import('@/lib/wagmi')
 
-      const encryptedResult = await readContract(wagmiConfig, {
+      const handle = await readContract(wagmiConfig, {
         address: COVERT_CONTRACT_ADDRESS,
         abi,
-        functionName: 'requestSalaryDecryption',
-        args: [publicKey, signature],
-      }) as `0x${string}`
+        functionName: 'getMySalary',
+      }) as string
 
-      setDecryptState('decrypting')
-      const encryptedBytes = Buffer.from(encryptedResult.slice(2), 'hex')
-      const plaintext = decryptValue(privateKey, new Uint8Array(encryptedBytes))
+      // 2. One EIP-712 signature → relayer decrypts off-chain
+      toast({ type: 'info', title: 'Sign to decrypt', message: 'Confirm the signature in your wallet — no gas needed' })
+      setDecryptState('signing')
 
-      setDecryptedSalary(plaintext)
+      const result = await userDecryptHandles([{ handle, contractAddress: COVERT_CONTRACT_ADDRESS }])
+
+      setDecryptedSalary(result[handle])
       setDecryptState('revealed')
       toast({ type: 'success', title: 'Salary decrypted', message: 'Only visible to you in this session' })
     } catch (err) {
@@ -71,32 +59,20 @@ export function useEmployeeData() {
   async function decryptBudget() {
     if (!isReady || !address) return
     try {
-      setDecryptState('signing')
-      const { publicKey, privateKey } = await generateDecryptionKeypair()
-      const eip712 = await buildEip712ForDecryption(publicKey)
-
-      const signature = await signTypedDataAsync({
-        domain: eip712.domain,
-        types: eip712.types,
-        primaryType: eip712.primaryType as string,
-        message: eip712.message,
-      }) as `0x${string}`
-
       setDecryptState('fetching')
       const { readContract } = await import('wagmi/actions')
       const { wagmiConfig } = await import('@/lib/wagmi')
 
-      const encryptedResult = await readContract(wagmiConfig, {
+      const handle = await readContract(wagmiConfig, {
         address: COVERT_CONTRACT_ADDRESS,
         abi,
-        functionName: 'getPeerBonusBudget',
-        args: [publicKey, signature],
-      }) as `0x${string}`
+        functionName: 'getMyBonusBudget',
+      }) as string
 
-      setDecryptState('decrypting')
-      const encryptedBytes = Buffer.from(encryptedResult.slice(2), 'hex')
-      const plaintext = decryptValue(privateKey, new Uint8Array(encryptedBytes))
-      setDecryptedBudget(plaintext)
+      setDecryptState('signing')
+      const result = await userDecryptHandles([{ handle, contractAddress: COVERT_CONTRACT_ADDRESS }])
+
+      setDecryptedBudget(result[handle])
       setDecryptState('idle')
     } catch (err) {
       setDecryptState('error')
