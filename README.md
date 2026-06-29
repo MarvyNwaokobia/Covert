@@ -204,17 +204,13 @@ Create `frontend/.env.local` with the following:
 # WalletConnect: get a free project ID at https://cloud.walletconnect.com
 NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID=your_project_id_here
 
-# Covert contract address: fill in after deployment to Sepolia (see contracts/)
-NEXT_PUBLIC_CONTRACT_ADDRESS=0x0000000000000000000000000000000000000000
-
-# Sepolia RPC (optional, uses public endpoint if left blank)
-NEXT_PUBLIC_SEPOLIA_RPC_URL=
-
-# Zama FHEVM addresses on Sepolia (defaults already set, only change if needed)
-NEXT_PUBLIC_ZAMA_KMS_CONTRACT=0x9D6891A6240D6130c54ae243d8005063D05fE14b
-NEXT_PUBLIC_ZAMA_ACL_CONTRACT=0xFee8407e2f5e3Ee68ad77cAE98c434e637f516e5
-NEXT_PUBLIC_ZAMA_GATEWAY_URL=https://gateway.sepolia.zama.ai
+# Deployed + verified on Sepolia (defaults already set in constants.ts; override only if redeployed)
+NEXT_PUBLIC_CONTRACT_ADDRESS=0x6ded5205331545437aAeF4897738D4ed7055Ce1c
+NEXT_PUBLIC_CUSDT_ADDRESS=0xDC9dDdB20D1D57Ef916738EAeB87B0943d1307d3
 ```
+
+> FHEVM coprocessor/KMS/relayer addresses are no longer set here — they ship with the
+> `@zama-fhe/relayer-sdk` `SepoliaConfig`. (The old `NEXT_PUBLIC_ZAMA_*` vars are obsolete.)
 
 ### Run the Dev Server
 

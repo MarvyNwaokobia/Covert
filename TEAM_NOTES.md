@@ -98,6 +98,7 @@ I can do this migration if you want — just say the word. Otherwise it's yours.
 
 ## Repo layout note
 
-There are two frontend copies: repo-root (`src/`, `app/…`) and `frontend/`. The ABI + constants were
-synced to **both**. `frontend/` looks like the more complete one — confirm which is canonical and we
-should probably delete the other to avoid drift.
+Resolved: the canonical app is **`frontend/`**. The old repo-root copy (`src/` + root Next config)
+was the abandoned day-1 scaffold (a strict subset) and has been **deleted**. Repo root is now just
+docs + `frontend/` (app) + `contracts/` (Solidity). This also cleared the duplicate-lockfile /
+workspace-root warning.
