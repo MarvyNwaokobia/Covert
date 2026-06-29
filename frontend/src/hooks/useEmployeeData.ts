@@ -38,6 +38,7 @@ export function useEmployeeData() {
         address: COVERT_CONTRACT_ADDRESS,
         abi,
         functionName: 'getMySalary',
+        account: address, // getMySalary uses msg.sender — without `account` the call's from is 0x0
       }) as string
 
       // 2. One EIP-712 signature → relayer decrypts off-chain
@@ -67,6 +68,7 @@ export function useEmployeeData() {
         address: COVERT_CONTRACT_ADDRESS,
         abi,
         functionName: 'getMyBonusBudget',
+        account: address, // getMyBonusBudget uses msg.sender — must set the call's from
       }) as string
 
       setDecryptState('signing')

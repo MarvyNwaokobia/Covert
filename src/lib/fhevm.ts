@@ -7,8 +7,11 @@ export type FhevmInstance = any
 let instancePromise: Promise<FhevmInstance> | null = null
 
 export async function createFhevmInstance(): Promise<FhevmInstance> {
-  const { createInstance, SepoliaConfig } = await import('@zama-fhe/relayer-sdk/web')
-  return createInstance(SepoliaConfig)
+  const { initSDK, createInstance, SepoliaConfig } = await import('@zama-fhe/relayer-sdk/web')
+  await initSDK() // load TFHE/KMS WASM — required for the /web build before createInstance
+  const network = (window as Window & { ethereum?: unknown }).ethereum
+  // SepoliaConfig omits `network` (required) — supply the injected wallet provider.
+  return createInstance({ ...SepoliaConfig, network })
 }
 
 // Singleton — reuse the same instance across the app
