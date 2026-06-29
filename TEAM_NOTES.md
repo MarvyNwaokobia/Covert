@@ -95,6 +95,10 @@ I can do this migration if you want — just say the word. Otherwise it's yours.
   that the amount exceeded the (secret) budget. Handle the "looks like success but 0 moved" case in UI
   copy if needed.
 - **Etherscan verify needs Sourcify enabled** (viaIR quirk). Already configured in `hardhat.config.ts`.
+- **`next build` must use webpack, not Turbopack.** Turbopack's production optimizer hangs forever on
+  the relayer-sdk WASM (0% CPU, no output). The `build` script is set to `next build --webpack`
+  (verified: builds clean, all routes prerender). `npm run dev` (Turbopack) is fine for local work; if
+  it ever hangs, add `--webpack` there too.
 
 ## Repo layout note
 
